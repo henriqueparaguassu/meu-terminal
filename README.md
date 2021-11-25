@@ -1,14 +1,14 @@
 # Meu terminal
 
-Essas são as configurações que uso no meu powershell.
+Essas são as configurações que uso no meu powershell baseado no terminal do usuario otonii.
 
 ![terminal](./images/terminal.png)
 
-## Pre-requisitos
+## Pré-requisitos
 
 ### Terminal
 
-Você precisa útilizar um terminal moderno como o [Hyper](https://hyper.is/) ou [Windows Terminal](https://github.com/microsoft/terminal), eu recomendo o [Windows Terminal](https://github.com/microsoft/terminal) (imagem acima).
+Você precisa utilizar um terminal moderno como o [Hyper](https://hyper.is/) ou [Windows Terminal](https://github.com/microsoft/terminal), eu recomendo o [Windows Terminal](https://github.com/microsoft/terminal) (imagem acima).
 
 ### Package Manager
 
@@ -16,21 +16,18 @@ Antes de atualizar o PowerShellGet, você sempre deve instalar o provedor do NuG
 
 ```ps1
 Install-PackageProvider -Name NuGet -Force
-Exit
 ```
 
-Para instalar o PowerShellGet no Windows 10, no Windows Server 2016, em qualquer sistema com o WMF 5.0 ou 5.1 instalado ou em qualquer sistema com o PowerShell 6, execute os comandos a seguir em uma sessão do PowerShell com privilégios elevados.
+Para instalar o PowerShellGet no Windows 10, Windows Server 2016, sistemas com o WMF 5.0 ou 5.1 instalado ou em qualquer sistema com o PowerShell 6, execute os comandos a seguir em uma sessão do PowerShell com privilégios elevados.
 
 ```ps1
 Install-Module -Name PowerShellGet -Force
-Exit
 ```
 
 Ou use o `Update-Module` para obter versões mais recentes.
 
 ```ps1
 Update-Module -Name PowerShellGet
-Exit
 ```
 
 ### Liberando a execução de scripts
@@ -41,16 +38,16 @@ Eu precisei liberar a execução para ele poder carregar os arquivos de configur
 # Liberar para o usuário atual
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
-# Ou liberar para todos os usuários
+# Ou liberar para todos os usuários (requer privilégios elevados)
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
 ```
 
 ### Fontes
 
-Pode ser que o seu terminal não reconheça algum carácter que iremos utilizar na hora de exibir o prompt, por isso recomendo que instale ao menos a `Fira Code` no seu computador.
+Pode ser que o seu terminal não reconheça alguns caracteres utilizados para exibir o prompt, por essa razão, recomendo que instale uma fonte como a `Jet Brains Mono` (ou outra Nerd Font) em seu computador.
 
-Fira Code: https://github.com/tonsky/FiraCode<br>
-JetBrains Mono: https://www.jetbrains.com/lp/mono/ (opcional)
+> [JetBrains Mono](https://www.jetbrains.com/lp/mono/)  
+> [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts/releases/)
 
 ## Instalação Automática `Beta`
 
@@ -75,7 +72,7 @@ Install-Module -Name PSReadLine -Scope CurrentUser -Force
 Para habilitar o engine, crie o seu arquivo de perfil do PowerShell
 
 ```ps1
-# Cria o arquivo
+# Caso não exista, cria o arquivo
 if (!(Test-Path -Path $PROFILE )) { New-Item -Type File -Path $PROFILE -Force }
 ```
 
@@ -97,7 +94,7 @@ WindowsPowerShell
 └── Microsoft.PowerShell_profile.ps1 (arquivo $profile pode ter outro nome)
 ```
 
-Agora abra o arquivo `Profile.ps1` e copie o seu conteúdo para o arquivo de profile do PowerShell `$profile`.
+Agora abra o arquivo `Profile.ps1` e copie o seu conteúdo para o arquivo de profile do PowerShell: `$profile`.
 
 ```ps1
 # Importando módulos
@@ -113,7 +110,7 @@ Set-Theme otonii
 # Importando configurações do PSReadLine
 Import-Module $PSScriptRoot\src\configs\PsReadLineConf.psm1
 
-# Sobrescrevendo a função ls
+# Sobrescrevendo a função ls para ficar semelhante à do UNIX
 New-Alias -Name ls -Value PowerLS -Option AllScope -Force
 
 # Custom Touch
@@ -124,6 +121,7 @@ New-Alias -Name touch -Value PowerTouch -Option AllScope -Force
 
 Agora o seu PowerShell já está configurado!
 
+---
 ## Extras
 
 Algumas configurações extras para deixar o terminal ainda mais bacana. (:
@@ -138,25 +136,9 @@ arquivo de profile a propriedade `Clear-Host` logo no começo do arquivo.
 
 #### Estratégia 1 flag `-nologo` (recomendada)
 ##### Windows Terminal
-Você precisa procurar nesse array o perfil do powershell e adicionar a flag -nologo no final, o meu ficou assim:
-```jsonc
-{
-  // ...
-  "profiles": {
-    // ...
-    "list": [
-      {
-        // Make changes here to the powershell.exe profile.
-        "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-        "name": "Windows PowerShell",
-        "commandline": "powershell.exe -nologo", // <- essa linha
-        "hidden": false
-      }
-    ]
-    // ...
-  }
-}
-```
+Abra as configurações do Windows Terminal com a tecla de atalho `ctrl` + `,` e adicione a flag `-nologo` assim:
+
+![nologo]("images/set-nologo-ps.png")
 
 ##### VSCode
 No VSCode você deve adicionar a flag na propriedade `terminal.integrated.shellArgs.windows` veja no exemplo:
