@@ -187,7 +187,7 @@ Essas são as minhas configurações do windows terminal, nela eu faço apenas a
       "cursorShape": "underscore",
       "font": {
         "face": "JetBrains Mono",
-        "size": 14
+        "size": 13
       }
     },
     // ... outras configurações
