@@ -1,6 +1,6 @@
 # Meu terminal
 
-Essas são as configurações que uso no meu powershell.
+Essas são as configurações que uso no meu powershell baseado no terminal do usuario otonii.
 
 ![terminal](./images/terminal.png)
 
