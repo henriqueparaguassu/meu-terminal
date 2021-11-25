@@ -4,11 +4,11 @@ Essas são as configurações que uso no meu powershell baseado no terminal do u
 
 ![terminal](./images/terminal.png)
 
-## Pre-requisitos
+## Pré-requisitos
 
 ### Terminal
 
-Você precisa útilizar um terminal moderno como o [Hyper](https://hyper.is/) ou [Windows Terminal](https://github.com/microsoft/terminal), eu recomendo o [Windows Terminal](https://github.com/microsoft/terminal) (imagem acima).
+Você precisa utilizar um terminal moderno como o [Hyper](https://hyper.is/) ou [Windows Terminal](https://github.com/microsoft/terminal), eu recomendo o [Windows Terminal](https://github.com/microsoft/terminal) (imagem acima).
 
 ### Package Manager
 
@@ -16,21 +16,18 @@ Antes de atualizar o PowerShellGet, você sempre deve instalar o provedor do NuG
 
 ```ps1
 Install-PackageProvider -Name NuGet -Force
-Exit
 ```
 
-Para instalar o PowerShellGet no Windows 10, no Windows Server 2016, em qualquer sistema com o WMF 5.0 ou 5.1 instalado ou em qualquer sistema com o PowerShell 6, execute os comandos a seguir em uma sessão do PowerShell com privilégios elevados.
+Para instalar o PowerShellGet no Windows 10, Windows Server 2016, sistemas com o WMF 5.0 ou 5.1 instalado ou em qualquer sistema com o PowerShell 6, execute os comandos a seguir em uma sessão do PowerShell com privilégios elevados.
 
 ```ps1
 Install-Module -Name PowerShellGet -Force
-Exit
 ```
 
 Ou use o `Update-Module` para obter versões mais recentes.
 
 ```ps1
 Update-Module -Name PowerShellGet
-Exit
 ```
 
 ### Liberando a execução de scripts
@@ -41,16 +38,16 @@ Eu precisei liberar a execução para ele poder carregar os arquivos de configur
 # Liberar para o usuário atual
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
-# Ou liberar para todos os usuários
+# Ou liberar para todos os usuários (requer privilégios elevados)
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
 ```
 
 ### Fontes
 
-Pode ser que o seu terminal não reconheça algum carácter que iremos utilizar na hora de exibir o prompt, por isso recomendo que instale ao menos a `Fira Code` no seu computador.
+Pode ser que o seu terminal não reconheça alguns caracteres utilizados para exibir o prompt, por essa razão, recomendo que instale uma fonte como a `Jet Brains Mono` (ou outra Nerd Font) em seu computador.
 
-Fira Code: https://github.com/tonsky/FiraCode<br>
-JetBrains Mono: https://www.jetbrains.com/lp/mono/ (opcional)
+> [JetBrains Mono](https://www.jetbrains.com/lp/mono/)  
+> [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts/releases/)
 
 ## Instalação Automática `Beta`
 
@@ -75,7 +72,7 @@ Install-Module -Name PSReadLine -Scope CurrentUser -Force
 Para habilitar o engine, crie o seu arquivo de perfil do PowerShell
 
 ```ps1
-# Cria o arquivo
+# Caso não exista, cria o arquivo
 if (!(Test-Path -Path $PROFILE )) { New-Item -Type File -Path $PROFILE -Force }
 ```
 
@@ -97,7 +94,7 @@ WindowsPowerShell
 └── Microsoft.PowerShell_profile.ps1 (arquivo $profile pode ter outro nome)
 ```
 
-Agora abra o arquivo `Profile.ps1` e copie o seu conteúdo para o arquivo de profile do PowerShell `$profile`.
+Agora abra o arquivo `Profile.ps1` e copie o seu conteúdo para o arquivo de profile do PowerShell: `$profile`.
 
 ```ps1
 # Importando módulos
@@ -113,7 +110,7 @@ Set-Theme otonii
 # Importando configurações do PSReadLine
 Import-Module $PSScriptRoot\src\configs\PsReadLineConf.psm1
 
-# Sobrescrevendo a função ls
+# Sobrescrevendo a função ls para ficar semelhante à do UNIX
 New-Alias -Name ls -Value PowerLS -Option AllScope -Force
 
 # Custom Touch
@@ -123,6 +120,8 @@ New-Alias -Name touch -Value PowerTouch -Option AllScope -Force
 ## Prontinho!
 
 Agora o seu PowerShell já está configurado!
+
+---
 
 ## Extras
 
@@ -137,44 +136,32 @@ basta adicionar a flag `-nologo` na invocação do programa ou adicionar ao
 arquivo de profile a propriedade `Clear-Host` logo no começo do arquivo.
 
 #### Estratégia 1 flag `-nologo` (recomendada)
+
 ##### Windows Terminal
-Você precisa procurar nesse array o perfil do powershell e adicionar a flag -nologo no final, o meu ficou assim:
-```jsonc
-{
-  // ...
-  "profiles": {
-    // ...
-    "list": [
-      {
-        // Make changes here to the powershell.exe profile.
-        "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-        "name": "Windows PowerShell",
-        "commandline": "powershell.exe -nologo", // <- essa linha
-        "hidden": false
-      }
-    ]
-    // ...
-  }
-}
-```
+
+Abra as configurações do Windows Terminal com a tecla de atalho `ctrl` + `,` e adicione a flag `-nologo` assim:
+
+![nologo](images/set-nologo-ps.png)
 
 ##### VSCode
-No VSCode você deve adicionar a flag na propriedade `terminal.integrated.shellArgs.windows` veja no exemplo:
+
+No VSCode você deve adicionar a flag na propriedade `args` do objeto `PowerShell` na opção `terminal.integrated.profiles.windows`. Veja no exemplo:
 
 ```jsonc
-{
-  //...
-  // Removendo mensagem de inicio do powershell
-  "terminal.integrated.shellArgs.windows": [
-      "-nologo"
-  ]
-  //...
+// Terminal
+"terminal.integrated.defaultProfile.windows": "PowerShell",
+"terminal.integrated.profiles.windows": {
+  "PowerShell": {
+    "source": "PowerShell",
+    "icon": "terminal-powershell",
+    "args": ["-nologo"] // nessa linha
+  }
 }
 ```
 
 #### Estratégia 2 arquivo `$Profile`
 
-Adicione o comando `Clear-Host` no começo do arquivo, eu acho que essa estratégia faz o terminal demorar um pouco mais para abrir.
+Adicione o comando `Clear-Host` no começo do arquivo, porém, essa estratégia não tem a mesma performance que a flag `-nologo`.
 
 ```ps1
 # Limpando Console
@@ -184,77 +171,30 @@ Clear-Host
 ...
 ```
 
-
-### Configurar o VSCode
-O PowerShell no windows já é o terminal padrão do VSCode, mas caso o seu não seja, abra o arquivo de configurações do VSCode e configure a propriedade `terminal.integrated.shell.windows`:
-
-```jsonc
-{
-  //...
-  // Configurando powershell como terminal padrão
-  "terminal.integrated.shell.windows": "powershell.exe",
-  // Removendo mensagem de inicio do powershell
-  "terminal.integrated.shellArgs.windows": [
-      "-nologo"
-  ]
-  //...
-}
-```
-
 ### Configurar o Windows Terminal
 
-Essas são as minhas configurações do windows terminal, nela eu faço apenas algumas configurações de aparência e removo a mensagem de inicio (logo) do powershell. Adicionei também duas opções de temas, `Dracula` e `OneDarkPro` você pode alterar o tema pela propriedade `colorScheme` do arquivo de configurações. `Não copie e cole esse trecho no seu arquivo de configurações, pode ser que a sua versão (no futuro) seja diferente da minha e isso gere erros. Configure as propriedades na mão, assim você vai aprendendo um pouco mais sobre elas`.
+Essas são as minhas configurações do windows terminal, nela eu faço apenas algumas configurações básicas de aparência. Adicionei também o tema **OneDarkPro** mas você pode alterar o tema pela propriedade `colorScheme` do arquivo de configurações e obter diversos temas na internet.  
+> ***Não copie e cole esse trecho no seu arquivo de configurações, pode ser que a sua versão (no futuro) seja diferente da minha e isso gere erros. Configure as propriedades de acordo com sua necessidade e preferência.***
 
 ```jsonc
-// Arquivo de configuração do windows-terminal (https://github.com/microsoft/terminal)
 {
   // ...
   "profiles": {
     "defaults": {
-      // Habilite essas duas linhas para deixar a sua janela transparente
-      // "useAcrylic": true,
-      // "acrylicOpacity": 0.7,
-      "cursorShape": "filledBox",
-      "colorScheme": "OneDarkPro",
-      "fontFace": "JetBrains Mono",
-      "startingDirectory": ".",
-      "fontSize": 14,
-      "padding": "8, 8, 8, 8"
-    },
-    "list": [
-      {
-        // Make changes here to the powershell.exe profile.
-        "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-        "name": "Windows PowerShell",
-        "commandline": "powershell.exe -nologo", // flag -nologo aqui
-        "hidden": false
+      "useAcrylic": true, // Habilita a transparência
+      "acrylicOpacity": 0.7, // Define o nível de transparência
+      "colorScheme": "OneDarkPro", // Color Scheme
+      "cursorShape": "underscore",
+      "font": {
+        "face": "JetBrains Mono",
+        "size": 14
       }
-      // ...
-    ]
-  },
-  // ...
-  "schemes": [
-    {
-      "name": "Dracula",
-      "background": "#272935",
-      "black": "#21222C",
-      "blue": "#BD93F9",
-      "cyan": "#8BE9FD",
-      "foreground": "#F8F8F2",
-      "green": "#50FA7B",
-      "purple": "#FF79C6",
-      "red": "#FF5555",
-      "white": "#F8F8F2",
-      "yellow": "#FFB86C",
-      "brightBlack": "#6272A4",
-      "brightBlue": "#D6ACFF",
-      "brightCyan": "#A4FFFF",
-      "brightGreen": "#69FF94",
-      "brightPurple": "#FF92DF",
-      "brightRed": "#FF6E6E",
-      "brightWhite": "#F8F8F2",
-      "brightYellow": "#FFFFA5"
     },
+    // ... outras configurações
+  },
+  // [...]
+  "schemes": [
+    // [...]
     {
       "name": "OneDarkPro",
       "background": "#282C34",
@@ -275,12 +215,12 @@ Essas são as minhas configurações do windows terminal, nela eu faço apenas a
       "brightRed": "#FF616E",
       "brightWhite": "#E6E6E6",
       "brightYellow": "#E5C07B"
-    }
+    },
   ]
-  // ...
+  // [...]
 }
 ```
 
-### O que são esses ícones?
+### Significado dos *Git Icons*
 
 ![terminal](./images/prompt.png)
