@@ -12,9 +12,9 @@ function Write-Theme {
     $promtSymbolColor = [ConsoleColor]::Red
   }
 
-  # Check if the virtualenv is active and 
+  # Check if the virtualenv is active
   if ($_PYTHON_VENV_PROMPT_PREFIX) {
-    $prompt +=  Write-Prompt -Object "($_PYTHON_VENV_PROMPT_PREFIX)" -ForegroundColor ([ConsoleColor]::DarkGreen)
+    $prompt += Write-Prompt -Object "($_PYTHON_VENV_PROMPT_PREFIX) " -ForegroundColor ([ConsoleColor]::DarkGreen)
   }
 
   #check for elevated prompt
@@ -34,7 +34,7 @@ function Write-Theme {
     $drive = "$(Split-Path -path $pwd -Leaf)"
   }
   $prompt += Write-Prompt -Object $drive -ForegroundColor ([ConsoleColor]::Cyan)
-
+  
   if (Get-Command Get-GitStatus -errorAction SilentlyContinue) {
     $status = Get-GitStatus
     
@@ -42,7 +42,7 @@ function Write-Theme {
       $gitIndicator = [char]::ConvertFromUtf32(0xE0A0)
       $prompt += Write-Prompt -Object " on " -ForegroundColor ([ConsoleColor]::White)
       $prompt += Write-Prompt -Object "$($gitIndicator) $($status.Branch) " -ForegroundColor ([ConsoleColor]::Magenta)
-
+	  
       $isClean = $true
       if ($status.Working.Length -gt 0) {
         $prompt += Write-Prompt -Object ([char]::ConvertFromUtf32(0x25CF)) -ForegroundColor ([ConsoleColor]::DarkYellow)
@@ -68,21 +68,10 @@ function Write-Theme {
         $prompt += Write-Prompt -Object ([char]::ConvertFromUtf32(0x25BC)) -ForegroundColor ([ConsoleColor]::Magenta)
         $isClean = $false
       }
-
+	  
       if ($isClean) {
         $prompt += Write-Prompt -Object ([char]::ConvertFromUtf32(0x2713)) -ForegroundColor ([ConsoleColor]::Green)
       }
-    }
-  }
-
-  $nodePath = Get-ChildItem
-  if ($nodePath.toString().Contains("package.json")) {
-    $nodePath = [Environment]::GetEnvironmentVariable("Path").Split(";")[0].Split("\")
-    if ($nodePath.Contains("node")) {
-      $nodeVersion = $nodePath[7]
-      $prompt += Write-Prompt -Object " via " -ForegroundColor ([ConsoleColor]::White)
-      $prompt += Write-Prompt -Object ([char]::ConvertFromUtf32(0x2B22)) -ForegroundColor ([ConsoleColor]::DarkGreen)
-      $prompt += Write-Prompt -Object " v$nodeVersion" -ForegroundColor ([ConsoleColor]::DarkGreen)
     }
   }
 
