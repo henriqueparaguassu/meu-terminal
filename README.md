@@ -3,7 +3,8 @@
 Essas são as configurações que uso no meu powershell baseado no terminal do usuario otonii.
 Esta versão inclui verificação do ambiente virtual python (virtualenv), e exibe a versão do NodeJS (somente para instâncias criadas com NVS).
 
-![terminal](./images/terminal.png)
+![terminal1](./images/terminal-with-node)
+![terminal1](./images/terminal.png)
 
 ## Pré-requisitos
 
