@@ -13,8 +13,11 @@ function Write-Theme {
   }
 
   # Check if the virtualenv is active and 
-  if ($_PYTHON_VENV_PROMPT_PREFIX) {
-    $prompt +=  Write-Prompt -Object "($_PYTHON_VENV_PROMPT_PREFIX)" -ForegroundColor ([ConsoleColor]::DarkGreen)
+  if (Test-Path -Path Env:VIRTUAL_ENV) {
+    $venv_path = $Env:VIRTUAL_ENV
+    $venv_path = $venv_path.Split('\')
+    $venv_path = $venv_path[$venv_path.Length - 1]
+    $prompt +=  Write-Prompt -Object "($venv_path) " -ForegroundColor ([ConsoleColor]::DarkGreen)
   }
 
   #check for elevated prompt
@@ -76,13 +79,15 @@ function Write-Theme {
   }
 
   $nodePath = Get-ChildItem
-  if ($nodePath.toString().Contains("package.json")) {
-    $nodePath = [Environment]::GetEnvironmentVariable("Path").Split(";")[0].Split("\")
-    if ($nodePath.Contains("node")) {
-      $nodeVersion = $nodePath[7]
-      $prompt += Write-Prompt -Object " via " -ForegroundColor ([ConsoleColor]::White)
-      $prompt += Write-Prompt -Object ([char]::ConvertFromUtf32(0x2B22)) -ForegroundColor ([ConsoleColor]::DarkGreen)
-      $prompt += Write-Prompt -Object " v$nodeVersion" -ForegroundColor ([ConsoleColor]::DarkGreen)
+  if ($nodePath){
+    if ($nodePath.toString().Contains("package.json")) {
+      $nodePath = [Environment]::GetEnvironmentVariable("Path").Split(";")[0].Split("\")
+      if ($nodePath.Contains("node")) {
+        $nodeVersion = $nodePath[7]
+        $prompt += Write-Prompt -Object " via " -ForegroundColor ([ConsoleColor]::White)
+        $prompt += Write-Prompt -Object ([char]::ConvertFromUtf32(0x2B22)) -ForegroundColor ([ConsoleColor]::DarkGreen)
+        $prompt += Write-Prompt -Object " v$nodeVersion" -ForegroundColor ([ConsoleColor]::DarkGreen)
+      }
     }
   }
 
